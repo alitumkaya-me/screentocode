@@ -8,7 +8,7 @@ import { CheckCircle, ArrowRight } from 'lucide-react'
 export default function SuccessPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const sessionId = searchParams.get('session_id')
+  const sessionId = searchParams?.get('session_id') || null
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
