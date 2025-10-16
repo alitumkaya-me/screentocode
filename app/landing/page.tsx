@@ -417,13 +417,13 @@ export default function LandingPage() {
               {/* CTA Button - %100 Ücretsiz ekli */}
               <button
                 onClick={() => router.push('/app')}
-                className="relative group overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white px-6 py-2.5 rounded-xl font-bold transition hover:scale-105 hover:shadow-xl hover:shadow-purple-500/50"
+                className="relative group overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold transition hover:scale-105 hover:shadow-xl hover:shadow-purple-500/50"
               >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Rocket className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+                <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+                  <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:-translate-y-1 transition-transform" />
                   <span className="flex flex-col items-start leading-tight">
-                    <span className="text-sm">{language === 'tr' ? 'Hemen Dene' : 'Try Now'}</span>
-                    <span className="text-[10px] opacity-90">{language === 'tr' ? '%100 Ücretsiz' : '100% Free'}</span>
+                    <span className="text-xs sm:text-sm">{language === 'tr' ? 'Hemen Dene' : 'Try Now'}</span>
+                    <span className="text-[9px] sm:text-[10px] opacity-90">{language === 'tr' ? '%100 Ücretsiz' : '100% Free'}</span>
                   </span>
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -509,16 +509,16 @@ export default function LandingPage() {
           </div>
           
           {/* Main Headline */}
-          <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight">
-            <span className="block text-gray-900 dark:text-white mb-3">{t.heroTitle1}</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 leading-[1.1] sm:leading-[1.05] tracking-tight">
+            <span className="block text-gray-900 dark:text-white mb-2 sm:mb-3">{t.heroTitle1}</span>
             <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               {t.heroTitle2}
             </span>
-            <span className="block text-gray-900 dark:text-white mt-3">{t.heroTitle3}</span>
+            <span className="block text-gray-900 dark:text-white mt-2 sm:mt-3">{t.heroTitle3}</span>
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-14 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-10 sm:mb-14 max-w-4xl mx-auto leading-relaxed px-4">
             {t.heroSubtitle1}
             <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-bold"> {t.heroSubtitle2} </span>
             {t.heroSubtitle3}
@@ -527,31 +527,31 @@ export default function LandingPage() {
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-5 justify-center mb-20">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-center mb-16 sm:mb-20 px-4">
             <button
               onClick={() => router.push('/app')}
-              className="group relative bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white px-12 py-6 rounded-2xl text-lg font-black transition-all duration-300 hover:scale-110 hover:shadow-[0_0_60px_rgba(168,85,247,0.8)] animate-pulse hover:animate-none"
+              className="group relative bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white px-8 sm:px-12 py-4 sm:py-6 rounded-xl sm:rounded-2xl text-base sm:text-lg font-black transition-all duration-300 hover:scale-110 hover:shadow-[0_0_60px_rgba(168,85,247,0.8)] animate-pulse hover:animate-none"
             >
-              <div className="relative z-10 flex items-center justify-center gap-3">
-                <Zap className="w-7 h-7 group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300" />
+              <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
+                <Zap className="w-5 h-5 sm:w-7 sm:h-7 group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300" />
                 <span>{t.heroCTA1}</span>
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-300" />
+                <ArrowRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-3 transition-transform duration-300" />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl sm:rounded-2xl" />
             </button>
             
             <button
               onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-              className="group relative overflow-hidden bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 backdrop-blur-sm text-gray-900 dark:text-white px-12 py-6 rounded-2xl text-lg font-black transition-all duration-300 hover:scale-105 border-2 border-gray-300 dark:border-white/10 hover:border-purple-500 dark:hover:border-purple-500/50 flex items-center justify-center gap-3 hover:shadow-xl hover:shadow-purple-500/30"
+              className="group relative overflow-hidden bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 backdrop-blur-sm text-gray-900 dark:text-white px-8 sm:px-12 py-4 sm:py-6 rounded-xl sm:rounded-2xl text-base sm:text-lg font-black transition-all duration-300 hover:scale-105 border-2 border-gray-300 dark:border-white/10 hover:border-purple-500 dark:hover:border-purple-500/50 flex items-center justify-center gap-2 sm:gap-3 hover:shadow-xl hover:shadow-purple-500/30"
             >
-              <TrendingUp className="w-6 h-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
               {t.heroCTA2}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl sm:rounded-2xl" />
             </button>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 max-w-5xl mx-auto px-4">
             {[
               { icon: Users, label: '15,000+', sublabel: t.heroStats2Label, color: 'from-purple-500 to-pink-500' },
               { icon: Code, label: '250K+', sublabel: t.heroStats1Label, color: 'from-pink-500 to-red-500' },
@@ -560,14 +560,14 @@ export default function LandingPage() {
             ].map((stat, i) => (
               <div 
                 key={i}
-                className="group relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-300 hover:scale-105 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-xl shadow-gray-200/50 dark:shadow-none"
+                className="group relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-300 hover:scale-105 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-xl shadow-gray-200/50 dark:shadow-none"
               >
-                <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-2xl" />
-                <div className={`bg-gradient-to-br ${stat.color} p-3 rounded-xl w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <stat.icon className="w-8 h-8 text-white" />
+                <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-xl sm:rounded-2xl" />
+                <div className={`bg-gradient-to-br ${stat.color} p-2 sm:p-3 rounded-lg sm:rounded-xl w-fit mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <stat.icon className="w-5 h-5 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <div className="text-3xl font-black text-gray-900 dark:text-white mb-2">{stat.label}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.sublabel}</div>
+                <div className="text-xl sm:text-3xl font-black text-gray-900 dark:text-white mb-1 sm:mb-2">{stat.label}</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">{stat.sublabel}</div>
               </div>
             ))}
           </div>
@@ -575,24 +575,24 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative py-32 px-6 z-10">
+      <section id="features" className="relative py-20 sm:py-32 px-4 sm:px-6 z-10">
         <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-20">
-            <div className="inline-block bg-purple-500/10 border border-purple-500/30 dark:border-purple-500/20 px-4 py-2 rounded-full mb-6">
-              <span className="text-purple-600 dark:text-purple-400 font-bold text-sm">{t.featuresTag}</span>
+          <div className="text-center mb-12 sm:mb-20">
+            <div className="inline-block bg-purple-500/10 border border-purple-500/30 dark:border-purple-500/20 px-4 py-2 rounded-full mb-4 sm:mb-6">
+              <span className="text-purple-600 dark:text-purple-400 font-bold text-xs sm:text-sm">{t.featuresTag}</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-4 sm:mb-6 px-4">
               {t.featuresTitle1}
               <span className="block bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent mt-2">
                 {t.featuresTitle2}
               </span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto px-4">
               {t.featuresSubtitle}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
             {[
               { 
                 icon: Zap, 
@@ -633,19 +633,19 @@ export default function LandingPage() {
             ].map((feature, i) => (
               <div 
                 key={i}
-                className="group relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-3xl p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-500 hover:scale-105 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-2xl shadow-gray-200/50 dark:shadow-none dark:hover:shadow-[0_0_40px_rgba(168,85,247,0.3)]"
+                className="group relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-500 hover:scale-105 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-2xl shadow-gray-200/50 dark:shadow-none dark:hover:shadow-[0_0_40px_rgba(168,85,247,0.3)]"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/5 group-hover:to-blue-500/5 rounded-3xl transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/5 group-hover:to-blue-500/5 rounded-2xl sm:rounded-3xl transition-all duration-500" />
                 
-                <div className={`relative bg-gradient-to-br ${feature.color} p-4 rounded-2xl w-fit mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                  <feature.icon className="w-8 h-8 text-white" />
-                  <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className={`relative bg-gradient-to-br ${feature.color} p-3 sm:p-4 rounded-xl sm:rounded-2xl w-fit mb-4 sm:mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                  <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                  <div className="absolute inset-0 bg-white/20 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-blue-600 dark:group-hover:from-purple-400 dark:group-hover:to-blue-400 group-hover:bg-clip-text transition-all duration-300">
+                <h3 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-blue-600 dark:group-hover:from-purple-400 dark:group-hover:to-blue-400 group-hover:bg-clip-text transition-all duration-300">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
                   {feature.desc}
                 </p>
               </div>
@@ -655,24 +655,24 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="relative py-32 px-6 z-10">
+      <section id="pricing" className="relative py-20 sm:py-32 px-4 sm:px-6 z-10">
         <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-20">
-            <div className="inline-block bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/20 px-4 py-2 rounded-full mb-6">
-              <span className="text-blue-600 dark:text-blue-400 font-bold text-sm">{t.pricingSectionTag}</span>
+          <div className="text-center mb-12 sm:mb-20">
+            <div className="inline-block bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/20 px-4 py-2 rounded-full mb-4 sm:mb-6">
+              <span className="text-blue-600 dark:text-blue-400 font-bold text-xs sm:text-sm">{t.pricingSectionTag}</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-4 sm:mb-6 px-4">
               {t.pricingSectionTitle1}
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mt-2">
                 {t.pricingSectionTitle2}
               </span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto px-4">
               {t.pricingSectionSubtitle}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-8 max-w-6xl mx-auto">
             {/* Free Plan */}
             <div className="group relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-3xl p-8 hover:border-gray-300 dark:hover:border-white/20 transition-all duration-300 hover:shadow-xl shadow-gray-200/50 dark:shadow-none">
               <div className="mb-8">
@@ -817,24 +817,24 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="relative py-32 px-6 z-10">
+      <section id="how-it-works" className="relative py-20 sm:py-32 px-4 sm:px-6 z-10">
         <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-20">
-            <div className="inline-block bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/20 px-4 py-2 rounded-full mb-6">
-              <span className="text-blue-600 dark:text-blue-400 font-bold text-sm">{t.howItWorksTag}</span>
+          <div className="text-center mb-12 sm:mb-20">
+            <div className="inline-block bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/20 px-4 py-2 rounded-full mb-4 sm:mb-6">
+              <span className="text-blue-600 dark:text-blue-400 font-bold text-xs sm:text-sm">{t.howItWorksTag}</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-4 sm:mb-6 px-4">
               {t.howItWorksTitle1}
               <span className="block bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent mt-2">
                 {t.howItWorksTitle2}
               </span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto px-4">
               {t.howItWorksSubtitle}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-8 max-w-6xl mx-auto">
             {[
               {
                 step: '01',
@@ -864,22 +864,22 @@ export default function LandingPage() {
                   <div className="hidden md:block absolute top-20 left-full w-full h-0.5 bg-gradient-to-r from-purple-500/30 to-transparent" />
                 )}
                 
-                <div className="relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-3xl p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-300 hover:scale-105 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-xl shadow-gray-200/50 dark:shadow-none">
+                <div className="relative bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-8 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-300 hover:scale-105 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-xl shadow-gray-200/50 dark:shadow-none">
                   {/* Step Number - Sol üstte içeride */}
-                  <div className="absolute top-4 left-4 text-7xl font-black text-gray-900/5 dark:text-white/5 group-hover:text-gray-900/10 dark:group-hover:text-white/10 transition-all duration-300">
+                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 text-5xl sm:text-7xl font-black text-gray-900/5 dark:text-white/5 group-hover:text-gray-900/10 dark:group-hover:text-white/10 transition-all duration-300">
                     {item.step}
                   </div>
                   
                   {/* Icon */}
-                  <div className={`relative bg-gradient-to-br ${item.color} p-4 rounded-2xl w-fit mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                    <item.icon className="w-10 h-10 text-white" />
-                    <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className={`relative bg-gradient-to-br ${item.color} p-3 sm:p-4 rounded-xl sm:rounded-2xl w-fit mb-4 sm:mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                    <item.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                    <div className="absolute inset-0 bg-white/20 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  <h3 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-4">
                     {item.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -888,31 +888,31 @@ export default function LandingPage() {
           </div>
 
           {/* Demo CTA */}
-          <div className="mt-20 text-center">
+          <div className="mt-12 sm:mt-20 text-center px-4">
             <button
               onClick={() => router.push('/app')}
-              className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white px-6 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
             >
-              <span className="relative z-10 flex items-center gap-3">
-                <Play className="w-6 h-6" />
+              <span className="relative z-10 flex items-center gap-2 sm:gap-3">
+                <Play className="w-5 h-5 sm:w-6 sm:h-6" />
                 {t.demoCTA}
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
-            <p className="text-gray-600 dark:text-gray-500 text-sm mt-4">{t.demoCTASubtitle}</p>
+            <p className="text-gray-600 dark:text-gray-500 text-xs sm:text-sm mt-3 sm:mt-4">{t.demoCTASubtitle}</p>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="relative py-32 px-6 z-10">
+      <section id="faq" className="relative py-20 sm:py-32 px-4 sm:px-6 z-10">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-20">
-            <div className="inline-block bg-purple-500/10 border border-purple-500/30 dark:border-purple-500/20 px-4 py-2 rounded-full mb-6">
-              <span className="text-purple-600 dark:text-purple-400 font-bold text-sm">{t.faqTag}</span>
+          <div className="text-center mb-12 sm:mb-20">
+            <div className="inline-block bg-purple-500/10 border border-purple-500/30 dark:border-purple-500/20 px-4 py-2 rounded-full mb-4 sm:mb-6">
+              <span className="text-purple-600 dark:text-purple-400 font-bold text-xs sm:text-sm">{t.faqTag}</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-6">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-white mb-4 sm:mb-6 px-4">
               {t.faqTitle1}
               <span className="block bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mt-2">
                 {t.faqTitle2}
@@ -920,7 +920,7 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {[
               { q: t.faq1Q, a: t.faq1A },
               { q: t.faq2Q, a: t.faq2A },
@@ -933,15 +933,15 @@ export default function LandingPage() {
             ].map((faq, i) => (
               <div 
                 key={i}
-                className="group bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl p-6 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-300 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-lg shadow-gray-200/50 dark:shadow-none"
+                className="group bg-white dark:bg-white/[0.02] backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-all duration-300 hover:border-purple-400 dark:hover:border-purple-500/30 hover:shadow-lg shadow-gray-200/50 dark:shadow-none"
               >
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-sm font-black text-white">?</span>
+                <h3 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="text-xs sm:text-sm font-black text-white">?</span>
                   </div>
                   {faq.q}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed pl-11">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed pl-9 sm:pl-11">
                   {faq.a}
                 </p>
               </div>
@@ -949,14 +949,14 @@ export default function LandingPage() {
           </div>
 
           {/* Contact CTA */}
-          <div className="mt-16 text-center bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 border border-purple-500/30 dark:border-purple-500/20 rounded-3xl p-10">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+          <div className="mt-12 sm:mt-16 text-center bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 border border-purple-500/30 dark:border-purple-500/20 rounded-2xl sm:rounded-3xl p-6 sm:p-10">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">
               {t.faqContactTitle}
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
               {t.faqContactDesc}
             </p>
-            <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/50">
+            <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/50 text-sm sm:text-base">
               {t.faqContactButton}
             </button>
           </div>

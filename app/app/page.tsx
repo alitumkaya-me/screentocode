@@ -252,7 +252,7 @@ export default function AppPage() {
             </Link>
             
             {/* Right side controls */}
-            <div className="flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               {/* User Info */}
               {session?.user && (
                 <div className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-full px-3 py-1.5">
@@ -321,37 +321,57 @@ export default function AppPage() {
                 {t.headerUpgrade}
               </button>
             </div>
+
+            {/* Mobile Controls */}
+            <div className="lg:hidden flex items-center gap-2">
+              {/* Free Trial Counter */}
+              <div className="flex items-center gap-1.5 bg-gradient-to-r from-purple-600/10 to-pink-600/10 border border-purple-500/30 rounded-full px-2.5 py-1">
+                <Gift className="w-3.5 h-3.5 text-purple-400" />
+                <span className="text-xs font-semibold text-gray-900 dark:text-white">{remainingUses}/3</span>
+              </div>
+
+              {/* Upgrade Button - Mobile */}
+              <button
+                onClick={() => router.push('/landing#pricing')}
+                className="flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-pink-600 px-2.5 py-1 rounded-lg text-xs font-semibold hover:scale-105 transition shadow-lg text-white"
+              >
+                <Crown className="w-3.5 h-3.5" />
+                Pro
+              </button>
+            </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <div className="relative z-10 container mx-auto px-6 py-12">
+        <div className="relative z-10 container mx-auto px-3 sm:px-6 py-8 sm:py-12">
           {!code ? (
             <>
               {/* Tab Selector */}
-              <div className="max-w-6xl mx-auto mb-12">
-                <div className="flex justify-center gap-4 mb-8">
+              <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
+                <div className="flex justify-center gap-2 sm:gap-4 mb-6 sm:mb-8 px-2">
                   <button
                     onClick={() => setActiveTab('demos')}
-                    className={`flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+                    className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-lg transition-all duration-300 ${
                       activeTab === 'demos'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                         : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
                     }`}
                   >
-                    <Layout className="w-5 h-5" />
-                    {language === 'tr' ? 'Demo Tasarımlar' : 'Demo Designs'}
+                    <Layout className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">{language === 'tr' ? 'Demo Tasarımlar' : 'Demo Designs'}</span>
+                    <span className="sm:hidden">{language === 'tr' ? 'Demo' : 'Demo'}</span>
                   </button>
                   <button
                     onClick={() => setActiveTab('figma')}
-                    className={`flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+                    className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-lg transition-all duration-300 ${
                       activeTab === 'figma'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                         : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
                     }`}
                   >
-                    <FileCode className="w-5 h-5" />
-                    {language === 'tr' ? 'Figma İçe Aktar' : 'Import Figma'}
+                    <FileCode className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">{language === 'tr' ? 'Figma İçe Aktar' : 'Import Figma'}</span>
+                    <span className="sm:hidden">Figma</span>
                   </button>
                 </div>
               </div>
@@ -359,25 +379,25 @@ export default function AppPage() {
               {/* Demo Selection */}
               {activeTab === 'demos' && (
                 <div className="max-w-6xl mx-auto">
-                  <div className="text-center mb-12">
-                    <h1 className="text-5xl font-black mb-4">
+                  <div className="text-center mb-8 sm:mb-12 px-4">
+                    <h1 className="text-3xl sm:text-5xl font-black mb-3 sm:mb-4">
                       <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 bg-clip-text text-transparent">
                         {t.appTitle}
                       </span>
                     </h1>
-                    <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                       {t.appSubtitle}
                     </p>
-                    <div className="mt-4 inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/20 rounded-full px-6 py-3">
-                      <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      <span className="text-blue-700 dark:text-blue-300 font-semibold">
+                    <div className="mt-3 sm:mt-4 inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/20 rounded-full px-4 sm:px-6 py-2 sm:py-3">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
+                      <span className="text-sm sm:text-base text-blue-700 dark:text-blue-300 font-semibold">
                         {remainingUses} {t.appRemainingTrials}
                       </span>
                     </div>
                   </div>
 
                   {/* Demo Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
                   {demoScreenshots.map((demo) => (
                     <div
                       key={demo.id}
