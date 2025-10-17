@@ -2,22 +2,25 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { 
   Sparkles, Zap, Code, Palette, Download, Shield, CheckCircle, Star, 
   ArrowRight, Layers, Clock, Users, TrendingUp, Github, Twitter, Linkedin,
   Menu, X, ChevronRight, Play, Rocket, Award, BarChart3, Upload, Code2, Globe,
-  Moon, Sun
+  Moon, Sun, User, LogOut
 } from 'lucide-react'
 import { type Language, useTranslation, formatPrice } from '@/lib/i18n'
 
 export default function LandingPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [language, setLanguage] = useState<Language>('tr')
   const [isLoading, setIsLoading] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   
   const t = useTranslation(language)
 
@@ -406,25 +409,104 @@ export default function LandingPage() {
                 )}
               </button>
               
-              {/* Sign In Button */}
-              <button
-                onClick={() => router.push('/auth/signin')}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-4 py-2 rounded-lg font-semibold transition hover:scale-105 border border-gray-300 dark:border-white/10 hover:border-purple-500"
-              >
-                {language === 'tr' ? 'Giriş Yap' : 'Sign In'}
-              </button>
+              {/* User Menu or Sign In */}
+              {session?.user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-full px-3 py-1.5 hover:bg-gray-200 dark:hover:bg-white/10 transition"
+                  >
+                    {session.user.image ? (
+                      <img src={session.user.image} alt={session.user.name || ''} className="w-6 h-6 rounded-full" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
+                        {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                      </div>
+                    )}
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white hidden md:block">
+                      {session.user.name?.split(' ')[0] || session.user.email?.split('@')[0]}
+                    </span>
+                    <ChevronRight className={`w-4 h-4 text-gray-500 transition-transform ${userMenuOpen ? 'rotate-90' : ''}`} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {userMenuOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setUserMenuOpen(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                        <div className="p-3 border-b border-gray-200 dark:border-white/10">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white">{session.user.name || session.user.email?.split('@')[0]}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">{session.user.email}</div>
+                        </div>
+                        
+                        <div className="p-1">
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              router.push('/app')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <Rocket className="w-4 h-4" />
+                            {language === 'tr' ? 'Dashboard' : 'Dashboard'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              router.push('/account/settings')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <User className="w-4 h-4" />
+                            {language === 'tr' ? 'Ayarlar' : 'Settings'}
+                          </button>
+                        </div>
+
+                        <div className="p-1 border-t border-gray-200 dark:border-white/10">
+                          <button
+                            onClick={async () => {
+                              setUserMenuOpen(false)
+                              const { signOut } = await import('next-auth/react')
+                              signOut({ callbackUrl: '/landing' })
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            {language === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={() => router.push('/auth/signin')}
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-4 py-2 rounded-lg font-semibold transition hover:scale-105 border border-gray-300 dark:border-white/10 hover:border-purple-500"
+                >
+                  {language === 'tr' ? 'Giriş Yap' : 'Sign In'}
+                </button>
+              )}
               
-              {/* CTA Button - %100 Ücretsiz ekli */}
+              {/* CTA Button - Session Aware */}
               <button
                 onClick={() => router.push('/app')}
                 className="relative group overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold transition hover:scale-105 hover:shadow-xl hover:shadow-purple-500/50"
               >
                 <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
                   <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:-translate-y-1 transition-transform" />
-                  <span className="flex flex-col items-start leading-tight">
-                    <span className="text-xs sm:text-sm">{language === 'tr' ? 'Hemen Dene' : 'Try Now'}</span>
-                    <span className="text-[9px] sm:text-[10px] opacity-90">{language === 'tr' ? '%100 Ücretsiz' : '100% Free'}</span>
-                  </span>
+                  {session?.user ? (
+                    <span className="text-xs sm:text-sm">{language === 'tr' ? 'Dashboard\'a Git' : 'Go to Dashboard'}</span>
+                  ) : (
+                    <span className="flex flex-col items-start leading-tight">
+                      <span className="text-xs sm:text-sm">{language === 'tr' ? 'Hemen Dene' : 'Try Now'}</span>
+                      <span className="text-[9px] sm:text-[10px] opacity-90">{language === 'tr' ? '%100 Ücretsiz' : '100% Free'}</span>
+                    </span>
+                  )}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
@@ -481,7 +563,10 @@ export default function LandingPage() {
                 onClick={() => { router.push('/app'); setMobileMenuOpen(false); }}
                 className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-bold"
               >
-                Ücretsiz Başla
+                {session?.user 
+                  ? (language === 'tr' ? 'Dashboard\'a Git' : 'Go to Dashboard')
+                  : (language === 'tr' ? 'Ücretsiz Başla' : 'Start Free')
+                }
               </button>
             </div>
           </div>
@@ -534,7 +619,12 @@ export default function LandingPage() {
             >
               <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
                 <Zap className="w-5 h-5 sm:w-7 sm:h-7 group-hover:rotate-12 group-hover:scale-125 transition-transform duration-300" />
-                <span>{t.heroCTA1}</span>
+                <span>
+                  {session?.user 
+                    ? (language === 'tr' ? 'Dashboard\'a Git' : 'Go to Dashboard')
+                    : t.heroCTA1
+                  }
+                </span>
                 <ArrowRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-3 transition-transform duration-300" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl sm:rounded-2xl" />
@@ -703,7 +793,10 @@ export default function LandingPage() {
                 onClick={() => router.push('/app')}
                 className="w-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-900 dark:text-white py-4 rounded-xl font-bold transition-all duration-300 border border-gray-300 dark:border-white/10 hover:scale-105"
               >
-                {t.pricingFreeButton}
+                {session?.user 
+                  ? (language === 'tr' ? 'Dashboard\'a Git' : 'Go to Dashboard')
+                  : t.pricingFreeButton
+                }
               </button>
             </div>
 
@@ -895,7 +988,10 @@ export default function LandingPage() {
             >
               <span className="relative z-10 flex items-center gap-2 sm:gap-3">
                 <Play className="w-5 h-5 sm:w-6 sm:h-6" />
-                {t.demoCTA}
+                {session?.user 
+                  ? (language === 'tr' ? 'Dashboard\'a Git' : 'Go to Dashboard')
+                  : t.demoCTA
+                }
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
