@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { 
   ArrowLeft, Download, Copy, Sparkles, Zap, Code2, 
   Check, Loader2, Eye, Crown, Lock, Gift, X, Globe,
-  Moon, Sun, FileCode, Layout
+  Moon, Sun, FileCode, Layout, History, Settings,
+  CreditCard, LogOut, Clock, User
 } from 'lucide-react'
 import { demoScreenshots } from '@/lib/demoData'
 import { FreeTrialManager } from '@/lib/freeTrialStore'
@@ -29,7 +30,7 @@ export default function AppPage() {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState(true)
-  const [activeTab, setActiveTab] = useState<'demos' | 'figma'>('demos')
+  const [activeTab, setActiveTab] = useState<'demos' | 'figma' | 'history' | 'settings' | 'billing'>('demos')
   
   const t = useTranslation(language)
   const currency = getCurrency(language)
@@ -416,29 +417,69 @@ export default function AppPage() {
           {!code ? (
             <>
               {/* Tab Selector */}
-              <div className="max-w-6xl mx-auto mb-12">
-                <div className="flex justify-center gap-4 mb-8">
+              <div className="max-w-7xl mx-auto mb-12">
+                <div className="flex flex-wrap justify-center gap-3 mb-8">
                   <button
                     onClick={() => setActiveTab('demos')}
-                    className={`flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
                       activeTab === 'demos'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                         : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
                     }`}
                   >
-                    <Layout className="w-5 h-5" />
+                    <Layout className="w-4 h-4" />
                     {language === 'tr' ? 'Demo Tasarımlar' : 'Demo Designs'}
                   </button>
                   <button
                     onClick={() => setActiveTab('figma')}
-                    className={`flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
                       activeTab === 'figma'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                         : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
                     }`}
                   >
-                    <FileCode className="w-5 h-5" />
+                    <FileCode className="w-4 h-4" />
                     {language === 'tr' ? 'Figma İçe Aktar' : 'Import Figma'}
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('history')}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
+                      activeTab === 'history'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
+                        : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
+                    }`}
+                  >
+                    <Clock className="w-4 h-4" />
+                    {language === 'tr' ? 'Geçmiş' : 'History'}
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('settings')}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
+                      activeTab === 'settings'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
+                        : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
+                    }`}
+                  >
+                    <User className="w-4 h-4" />
+                    {language === 'tr' ? 'Ayarlar' : 'Settings'}
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('billing')}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
+                      activeTab === 'billing'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
+                        : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
+                    }`}
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    {language === 'tr' ? 'Ödeme' : 'Billing'}
+                  </button>
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/landing' })}
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 hover:bg-red-500/20 hover:scale-105"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {language === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
                   </button>
                 </div>
               </div>
@@ -588,6 +629,338 @@ export default function AppPage() {
                   }}
                   onUpgradeRequired={() => setShowUpgradeModal(true)}
                 />
+              )}
+
+              {/* History Tab */}
+              {activeTab === 'history' && (
+                <div className="max-w-6xl mx-auto">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-black mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {language === 'tr' ? 'Dönüştürme Geçmişi' : 'Conversion History'}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">
+                      {language === 'tr' 
+                        ? 'Önceki tasarımlarınızı ve Figma dönüştürmelerinizi görüntüleyin' 
+                        : 'View your previous designs and Figma conversions'}
+                    </p>
+                  </div>
+
+                  {/* History Items - Mock Data */}
+                  <div className="space-y-4">
+                    {[
+                      { 
+                        id: 1, 
+                        type: 'Demo', 
+                        name: 'Modern SaaS Landing Page', 
+                        framework: 'React',
+                        date: '15 Ekim 2025',
+                        thumbnail: '/demo-1.jpg'
+                      },
+                      { 
+                        id: 2, 
+                        type: 'Figma', 
+                        name: 'E-commerce Product Page', 
+                        framework: 'Vue',
+                        date: '14 Ekim 2025',
+                        thumbnail: '/demo-2.jpg'
+                      },
+                      { 
+                        id: 3, 
+                        type: 'Demo', 
+                        name: 'Portfolio Website', 
+                        framework: 'HTML',
+                        date: '12 Ekim 2025',
+                        thumbnail: '/demo-3.jpg'
+                      },
+                    ].map((item) => (
+                      <div 
+                        key={item.id}
+                        className="group relative bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                              <FileCode className="w-8 h-8 text-white" />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{item.name}</h3>
+                                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 font-semibold">
+                                  {item.type}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                <span className="flex items-center gap-1">
+                                  <Code2 className="w-4 h-4" />
+                                  {item.framework}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-4 h-4" />
+                                  {item.date}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button className="p-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 rounded-lg transition">
+                              <Eye className="w-5 h-5" />
+                            </button>
+                            <button className="p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-lg transition">
+                              <Download className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Empty State for new users */}
+                  {/* <div className="text-center py-20">
+                    <History className="w-20 h-20 text-gray-300 dark:text-gray-600 mx-auto mb-6" />
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                      {language === 'tr' ? 'Henüz geçmiş yok' : 'No history yet'}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8">
+                      {language === 'tr' 
+                        ? 'İlk tasarımınızı dönüştürdüğünüzde burada görünecek' 
+                        : 'Your first conversion will appear here'}
+                    </p>
+                    <button
+                      onClick={() => setActiveTab('demos')}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition"
+                    >
+                      {language === 'tr' ? 'Demo ile Başla' : 'Start with Demo'}
+                    </button>
+                  </div> */}
+                </div>
+              )}
+
+              {/* Settings Tab */}
+              {activeTab === 'settings' && (
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-black mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {language === 'tr' ? 'Hesap Ayarları' : 'Account Settings'}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">
+                      {language === 'tr' 
+                        ? 'Profil bilgilerinizi ve tercihlerinizi yönetin' 
+                        : 'Manage your profile and preferences'}
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Profile Section */}
+                    <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-8">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                        <User className="w-5 h-5 text-purple-500" />
+                        {language === 'tr' ? 'Profil Bilgileri' : 'Profile Information'}
+                      </h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            {language === 'tr' ? 'Ad Soyad' : 'Full Name'}
+                          </label>
+                          <input
+                            type="text"
+                            value={session?.user?.name || ''}
+                            disabled
+                            className="w-full px-4 py-3 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            {language === 'tr' ? 'E-posta' : 'Email'}
+                          </label>
+                          <input
+                            type="email"
+                            value={session?.user?.email || ''}
+                            disabled
+                            className="w-full px-4 py-3 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-xl text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                          <Check className="w-4 h-4 text-green-500" />
+                          {language === 'tr' ? 'OAuth ile giriş yapıldı' : 'Signed in with OAuth'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Preferences */}
+                    <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-8">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                        <Settings className="w-5 h-5 text-purple-500" />
+                        {language === 'tr' ? 'Tercihler' : 'Preferences'}
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-semibold text-gray-900 dark:text-white">{language === 'tr' ? 'Dil' : 'Language'}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {language === 'tr' ? 'Arayüz dili' : 'Interface language'}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg p-0.5">
+                            <button
+                              onClick={() => setLanguage('tr')}
+                              className={`px-3 py-1.5 rounded text-sm font-bold transition ${
+                                language === 'tr' 
+                                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`}
+                            >
+                              🇹🇷 TR
+                            </button>
+                            <button
+                              onClick={() => setLanguage('en')}
+                              className={`px-3 py-1.5 rounded text-sm font-bold transition ${
+                                language === 'en' 
+                                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`}
+                            >
+                              🇺🇸 EN
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-white/10">
+                          <div>
+                            <p className="font-semibold text-gray-900 dark:text-white">{language === 'tr' ? 'Tema' : 'Theme'}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {language === 'tr' ? 'Görünüm tercihi' : 'Appearance preference'}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => setIsDarkMode(!isDarkMode)}
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 rounded-lg transition"
+                          >
+                            {isDarkMode ? (
+                              <>
+                                <Sun className="w-4 h-4 text-yellow-500" />
+                                <span className="text-sm font-semibold text-gray-900 dark:text-white">Light</span>
+                              </>
+                            ) : (
+                              <>
+                                <Moon className="w-4 h-4 text-purple-500" />
+                                <span className="text-sm font-semibold text-gray-900 dark:text-white">Dark</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Danger Zone */}
+                    <div className="bg-red-500/5 border border-red-500/30 rounded-2xl p-8">
+                      <h3 className="text-xl font-bold text-red-600 dark:text-red-400 mb-4">
+                        {language === 'tr' ? 'Tehlikeli Bölge' : 'Danger Zone'}
+                      </h3>
+                      <button
+                        onClick={() => signOut({ callbackUrl: '/landing' })}
+                        className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold transition"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        {language === 'tr' ? 'Hesaptan Çıkış Yap' : 'Sign Out from Account'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Billing Tab */}
+              {activeTab === 'billing' && (
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-black mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {language === 'tr' ? 'Ödeme ve Abonelik' : 'Billing & Subscription'}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">
+                      {language === 'tr' 
+                        ? 'Planınızı yönetin ve ödeme geçmişinizi görüntüleyin' 
+                        : 'Manage your plan and view payment history'}
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Current Plan */}
+                    <div className="bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 rounded-2xl p-[2px]">
+                      <div className="bg-black rounded-2xl p-8">
+                        <div className="flex items-center justify-between mb-6">
+                          <div>
+                            <h3 className="text-2xl font-bold text-white mb-2">
+                              {language === 'tr' ? 'Ücretsiz Plan' : 'Free Plan'}
+                            </h3>
+                            <p className="text-gray-400">
+                              {language === 'tr' ? '3 ücretsiz deneme hakkı' : '3 free trial uses'}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-4xl font-black text-white">$0</div>
+                            <div className="text-gray-400 text-sm">{language === 'tr' ? '/ay' : '/month'}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                          <div className="flex items-center gap-2 text-white">
+                            <Gift className="w-5 h-5 text-purple-400" />
+                            <span className="font-semibold">{remainingUses}/3 {language === 'tr' ? 'kalan kullanım' : 'uses remaining'}</span>
+                          </div>
+                          <button
+                            onClick={() => router.push('/landing#pricing')}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-2.5 rounded-xl font-bold transition flex items-center gap-2"
+                          >
+                            <Crown className="w-4 h-4" />
+                            {language === 'tr' ? 'Pro\'ya Yükselt' : 'Upgrade to Pro'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment History */}
+                    <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-8">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                        <CreditCard className="w-5 h-5 text-purple-500" />
+                        {language === 'tr' ? 'Ödeme Geçmişi' : 'Payment History'}
+                      </h3>
+                      
+                      {/* Empty State */}
+                      <div className="text-center py-12">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <CreditCard className="w-8 h-8 text-gray-400" />
+                        </div>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                          {language === 'tr' ? 'Henüz ödeme yapılmadı' : 'No payments yet'}
+                        </p>
+                        <button
+                          onClick={() => router.push('/landing#pricing')}
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition"
+                        >
+                          {language === 'tr' ? 'Planları İncele' : 'View Plans'}
+                        </button>
+                      </div>
+
+                      {/* Mock Payment History - uncomment when ready */}
+                      {/* <div className="space-y-3">
+                        {[
+                          { date: '1 Ekim 2025', amount: '$29', plan: 'Pro', status: 'paid' },
+                          { date: '1 Eylül 2025', amount: '$29', plan: 'Pro', status: 'paid' },
+                        ].map((payment, i) => (
+                          <div key={i} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-xl">
+                            <div>
+                              <p className="font-semibold text-gray-900 dark:text-white">{payment.plan} Plan</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">{payment.date}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-gray-900 dark:text-white">{payment.amount}</p>
+                              <span className="text-xs px-2 py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400">
+                                {language === 'tr' ? 'Ödendi' : 'Paid'}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div> */}
+                    </div>
+                  </div>
+                </div>
               )}
             </>
           ) : (
