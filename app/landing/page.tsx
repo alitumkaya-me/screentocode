@@ -318,8 +318,8 @@ export default function LandingPage() {
       `}</style>
       
       <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white overflow-hidden transition-colors duration-300">
-      {/* Neural Network Background */}
-      <div className="fixed inset-0 z-0">
+      {/* Neural Network Background - Hidden on mobile */}
+      <div className="hidden md:block fixed inset-0 z-0">
         {/* Canvas for neural network */}
         <canvas 
           id="neural-canvas" 
