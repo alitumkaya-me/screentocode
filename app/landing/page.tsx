@@ -457,7 +457,12 @@ export default function LandingPage() {
                           <button
                             onClick={() => {
                               setUserMenuOpen(false)
-                              router.push('/account/settings')
+                              router.push('/app')
+                              // Settings tab will be activated via URL parameter in future
+                              setTimeout(() => {
+                                const settingsTab = document.querySelector('[data-tab="settings"]') as HTMLButtonElement
+                                settingsTab?.click()
+                              }, 100)
                             }}
                             className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
                           >

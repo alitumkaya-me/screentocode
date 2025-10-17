@@ -341,18 +341,76 @@ export default function AppPage() {
             
             {/* Right side controls */}
             <div className="flex items-center gap-3">
-              {/* User Info */}
+              {/* User Dropdown Menu */}
               {session?.user && (
-                <div className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-full px-3 py-1.5">
-                  {session.user.image ? (
-                    <img src={session.user.image} alt={session.user.name || ''} className="w-6 h-6 rounded-full" />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
-                      {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      const dropdown = document.getElementById('app-user-dropdown')
+                      if (dropdown) {
+                        dropdown.classList.toggle('hidden')
+                      }
+                    }}
+                    className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-full px-3 py-1.5 hover:bg-gray-200 dark:hover:bg-white/10 transition cursor-pointer"
+                  >
+                    {session.user.image ? (
+                      <img src={session.user.image} alt={session.user.name || ''} className="w-6 h-6 rounded-full" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
+                        {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                      </div>
+                    )}
+                    <div className="text-xs font-semibold text-gray-900 dark:text-white">
+                      {session.user.name?.split(' ')[0] || session.user.email?.split('@')[0]}
                     </div>
-                  )}
-                  <div className="text-xs font-semibold text-gray-900 dark:text-white">
-                    {session.user.name || session.user.email?.split('@')[0]}
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    id="app-user-dropdown"
+                    className="hidden absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl shadow-2xl shadow-purple-500/20 z-50"
+                  >
+                    <div className="p-3 border-b border-gray-200 dark:border-white/10">
+                      <div className="text-sm font-semibold text-gray-900 dark:text-white">{session.user.name || session.user.email?.split('@')[0]}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{session.user.email}</div>
+                    </div>
+                    
+                    <div className="p-1">
+                      <button
+                        onClick={() => {
+                          document.getElementById('app-user-dropdown')?.classList.add('hidden')
+                          setActiveTab('demos')
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                      >
+                        <Layout className="w-4 h-4" />
+                        {language === 'tr' ? 'Dashboard' : 'Dashboard'}
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          document.getElementById('app-user-dropdown')?.classList.add('hidden')
+                          setActiveTab('settings')
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                      >
+                        <User className="w-4 h-4" />
+                        {language === 'tr' ? 'Ayarlar' : 'Settings'}
+                      </button>
+                    </div>
+
+                    <div className="p-1 border-t border-gray-200 dark:border-white/10">
+                      <button
+                        onClick={() => {
+                          document.getElementById('app-user-dropdown')?.classList.add('hidden')
+                          signOut({ callbackUrl: '/landing' })
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        {language === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -453,6 +511,7 @@ export default function AppPage() {
                     {language === 'tr' ? 'Geçmiş' : 'History'}
                   </button>
                   <button
+                    data-tab="settings"
                     onClick={() => setActiveTab('settings')}
                     className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
                       activeTab === 'settings'
