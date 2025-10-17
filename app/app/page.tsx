@@ -38,6 +38,13 @@ export default function AppPage() {
   useEffect(() => {
     // Load remaining uses
     setRemainingUses(FreeTrialManager.getRemainingUses())
+    
+    // Check for saved tab from landing page
+    const savedTab = localStorage.getItem('app-active-tab')
+    if (savedTab && ['demos', 'figma', 'history', 'settings', 'billing'].includes(savedTab)) {
+      setActiveTab(savedTab as 'demos' | 'figma' | 'history' | 'settings' | 'billing')
+      localStorage.removeItem('app-active-tab') // Clear after use
+    }
   }, [])
 
   // Authentication check - redirect if not signed in

@@ -8,7 +8,7 @@ import {
   Sparkles, Zap, Code, Palette, Download, Shield, CheckCircle, Star, 
   ArrowRight, Layers, Clock, Users, TrendingUp, Github, Twitter, Linkedin,
   Menu, X, ChevronRight, Play, Rocket, Award, BarChart3, Upload, Code2, Globe,
-  Moon, Sun, User, LogOut
+  Moon, Sun, User, LogOut, CreditCard
 } from 'lucide-react'
 import { type Language, useTranslation, formatPrice } from '@/lib/i18n'
 
@@ -457,17 +457,37 @@ export default function LandingPage() {
                           <button
                             onClick={() => {
                               setUserMenuOpen(false)
+                              localStorage.setItem('app-active-tab', 'history')
                               router.push('/app')
-                              // Settings tab will be activated via URL parameter in future
-                              setTimeout(() => {
-                                const settingsTab = document.querySelector('[data-tab="settings"]') as HTMLButtonElement
-                                settingsTab?.click()
-                              }, 100)
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <Clock className="w-4 h-4" />
+                            {language === 'tr' ? 'Geçmiş' : 'History'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              localStorage.setItem('app-active-tab', 'settings')
+                              router.push('/app')
                             }}
                             className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
                           >
                             <User className="w-4 h-4" />
                             {language === 'tr' ? 'Ayarlar' : 'Settings'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              localStorage.setItem('app-active-tab', 'billing')
+                              router.push('/app')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <CreditCard className="w-4 h-4" />
+                            {language === 'tr' ? 'Ödeme' : 'Billing'}
                           </button>
                         </div>
 
