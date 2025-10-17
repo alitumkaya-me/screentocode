@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react'
 import { 
   ArrowLeft, Download, Copy, Sparkles, Zap, Code2, 
   Check, Loader2, Eye, Crown, Lock, Gift, X, Globe,
-  Moon, Sun, FileCode, Layout
+  Moon, Sun, FileCode, Layout, ChevronRight
 } from 'lucide-react'
 import { demoScreenshots } from '@/lib/demoData'
 import { FreeTrialManager } from '@/lib/freeTrialStore'
@@ -30,6 +30,7 @@ export default function AppPage() {
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [activeTab, setActiveTab] = useState<'demos' | 'figma'>('demos')
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   
   const t = useTranslation(language)
   const currency = getCurrency(language)
@@ -37,6 +38,20 @@ export default function AppPage() {
   useEffect(() => {
     // Load remaining uses
     setRemainingUses(FreeTrialManager.getRemainingUses())
+  }, [])
+
+  // Apply custom cursor globally
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.innerHTML = `
+      * {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 2L16 10L9 11L6 16L2 2Z" fill="%23a855f7" stroke="%23ffffff" stroke-width="1"/></svg>') 2 2, auto !important;
+      }
+    `
+    document.head.appendChild(style)
+    return () => {
+      document.head.removeChild(style)
+    }
   }, [])
 
   // Authentication check - redirect if not signed in
@@ -272,26 +287,6 @@ export default function AppPage() {
     }
   }, [isDarkMode])
 
-  // Show loading while checking authentication
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 mx-auto animate-pulse">
-            <Sparkles className="w-10 h-10 text-white" />
-          </div>
-          <div className="text-2xl font-black text-white mb-2">ScreenToCode</div>
-          <div className="text-gray-400 text-sm">Yükleniyor...</div>
-        </div>
-      </div>
-    )
-  }
-
-  // Don't render if not authenticated
-  if (status === 'unauthenticated') {
-    return null
-  }
-
   const handleDemoSelect = (demoId: string) => {
     // Check if user has remaining uses
     if (!FreeTrialManager.canUseTrial()) {
@@ -344,15 +339,28 @@ export default function AppPage() {
     router.push('/landing#pricing')
   }
 
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 mx-auto animate-pulse">
+            <Sparkles className="w-10 h-10 text-white" />
+          </div>
+          <div className="text-2xl font-black text-white mb-2">ScreenToCode</div>
+          <div className="text-gray-400 text-sm">Yükleniyor...</div>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render if not authenticated
+  if (status === 'unauthenticated') {
+    return null
+  }
+
   return (
-    <>
-      <style jsx global>{`
-        * {
-          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 2L16 10L9 11L6 16L2 2Z" fill="%23a855f7" stroke="%23ffffff" stroke-width="1"/></svg>') 2 2, auto !important;
-        }
-      `}</style>
-      
-      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white overflow-hidden transition-colors duration-300">
       {/* Neural Network Background - Hidden on mobile */}
       <div className="hidden md:block fixed inset-0 z-0">
         {/* Canvas for neural network */}
@@ -376,19 +384,90 @@ export default function AppPage() {
             
             {/* Right side controls */}
             <div className="hidden lg:flex items-center gap-3">
-              {/* User Info */}
+              {/* User Info with Dropdown */}
               {session?.user && (
-                <div className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-full px-3 py-1.5">
-                  {session.user.image ? (
-                    <img src={session.user.image} alt={session.user.name || ''} className="w-6 h-6 rounded-full" />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
-                      {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                <div className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-full px-3 py-1.5 hover:bg-gray-200 dark:hover:bg-white/10 transition"
+                  >
+                    {session.user.image ? (
+                      <img src={session.user.image} alt={session.user.name || ''} className="w-6 h-6 rounded-full" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
+                        {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                      </div>
+                    )}
+                    <div className="text-xs font-semibold text-gray-900 dark:text-white">
+                      {session.user.name || session.user.email?.split('@')[0]}
                     </div>
+                    <ChevronRight className={`w-4 h-4 text-gray-500 transition-transform ${userMenuOpen ? 'rotate-90' : ''}`} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {userMenuOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setUserMenuOpen(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                        <div className="p-3 border-b border-gray-200 dark:border-white/10">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white">{session.user.name || session.user.email?.split('@')[0]}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">{session.user.email}</div>
+                        </div>
+                        
+                        <div className="p-1">
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              router.push('/account/settings')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <Globe className="w-4 h-4" />
+                            {language === 'tr' ? 'Ayarlar' : 'Settings'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              router.push('/account/billing')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <Crown className="w-4 h-4" />
+                            {language === 'tr' ? 'Ödeme & Planlar' : 'Billing & Plans'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false)
+                              router.push('/landing#pricing')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                          >
+                            <Zap className="w-4 h-4" />
+                            {language === 'tr' ? 'Upgrade Yap' : 'Upgrade Plan'}
+                          </button>
+                        </div>
+
+                        <div className="p-1 border-t border-gray-200 dark:border-white/10">
+                          <button
+                            onClick={async () => {
+                              setUserMenuOpen(false)
+                              const { signOut } = await import('next-auth/react')
+                              signOut({ callbackUrl: '/landing' })
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                          >
+                            <ArrowLeft className="w-4 h-4" />
+                            {language === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   )}
-                  <div className="text-xs font-semibold text-gray-900 dark:text-white">
-                    {session.user.name || session.user.email?.split('@')[0]}
-                  </div>
                 </div>
               )}
 
@@ -829,6 +908,5 @@ export default function AppPage() {
           </div>
         </footer>
       </div>
-    </>
   )
 }
