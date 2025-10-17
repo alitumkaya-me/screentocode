@@ -390,12 +390,34 @@ export default function AppPage() {
                       <button
                         onClick={() => {
                           document.getElementById('app-user-dropdown')?.classList.add('hidden')
+                          setActiveTab('history')
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                      >
+                        <Clock className="w-4 h-4" />
+                        {language === 'tr' ? 'Geçmiş' : 'History'}
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          document.getElementById('app-user-dropdown')?.classList.add('hidden')
                           setActiveTab('settings')
                         }}
                         className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
                       >
                         <User className="w-4 h-4" />
                         {language === 'tr' ? 'Ayarlar' : 'Settings'}
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          document.getElementById('app-user-dropdown')?.classList.add('hidden')
+                          setActiveTab('billing')
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition"
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        {language === 'tr' ? 'Ödeme' : 'Billing'}
                       </button>
                     </div>
 
@@ -479,66 +501,25 @@ export default function AppPage() {
                 <div className="flex flex-wrap justify-center gap-3 mb-8">
                   <button
                     onClick={() => setActiveTab('demos')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
                       activeTab === 'demos'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                         : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
                     }`}
                   >
-                    <Layout className="w-4 h-4" />
+                    <Layout className="w-5 h-5" />
                     {language === 'tr' ? 'Demo Tasarımlar' : 'Demo Designs'}
                   </button>
                   <button
                     onClick={() => setActiveTab('figma')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
                       activeTab === 'figma'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
                         : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
                     }`}
                   >
-                    <FileCode className="w-4 h-4" />
+                    <FileCode className="w-5 h-5" />
                     {language === 'tr' ? 'Figma İçe Aktar' : 'Import Figma'}
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('history')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
-                      activeTab === 'history'
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
-                        : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
-                    }`}
-                  >
-                    <Clock className="w-4 h-4" />
-                    {language === 'tr' ? 'Geçmiş' : 'History'}
-                  </button>
-                  <button
-                    data-tab="settings"
-                    onClick={() => setActiveTab('settings')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
-                      activeTab === 'settings'
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
-                        : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
-                    }`}
-                  >
-                    <User className="w-4 h-4" />
-                    {language === 'tr' ? 'Ayarlar' : 'Settings'}
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('billing')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
-                      activeTab === 'billing'
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
-                        : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:scale-105'
-                    }`}
-                  >
-                    <CreditCard className="w-4 h-4" />
-                    {language === 'tr' ? 'Ödeme' : 'Billing'}
-                  </button>
-                  <button
-                    onClick={() => signOut({ callbackUrl: '/landing' })}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 hover:bg-red-500/20 hover:scale-105"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    {language === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
                   </button>
                 </div>
               </div>
