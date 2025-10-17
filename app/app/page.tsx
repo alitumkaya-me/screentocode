@@ -35,71 +35,8 @@ export default function AppPage() {
   const currency = getCurrency(language)
 
   useEffect(() => {
-    // Custom cursor setup with trail
-    const cursor = document.getElementById('cursor')
-    const trail1 = document.getElementById('cursor-trail-1')
-    const trail2 = document.getElementById('cursor-trail-2')
-    const trail3 = document.getElementById('cursor-trail-3')
-    const trail4 = document.getElementById('cursor-trail-4')
-    let mouseX = 0
-    let mouseY = 0
-    let trail1X = 0, trail1Y = 0
-    let trail2X = 0, trail2Y = 0
-    let trail3X = 0, trail3Y = 0
-    let trail4X = 0, trail4Y = 0
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX
-      mouseY = e.clientY
-      if (cursor) {
-        cursor.style.left = `${mouseX - 12}px`
-        cursor.style.top = `${mouseY - 12}px`
-      }
-    }
-
-    const animateTrail = () => {
-      // Each trail segment follows the previous one with delay
-      trail1X += (mouseX - trail1X) * 0.25
-      trail1Y += (mouseY - trail1Y) * 0.25
-      
-      trail2X += (trail1X - trail2X) * 0.2
-      trail2Y += (trail1Y - trail2Y) * 0.2
-      
-      trail3X += (trail2X - trail3X) * 0.15
-      trail3Y += (trail2Y - trail3Y) * 0.15
-      
-      trail4X += (trail3X - trail4X) * 0.1
-      trail4Y += (trail3Y - trail4Y) * 0.1
-      
-      if (trail1) {
-        trail1.style.left = `${trail1X - 10}px`
-        trail1.style.top = `${trail1Y - 10}px`
-      }
-      if (trail2) {
-        trail2.style.left = `${trail2X - 8}px`
-        trail2.style.top = `${trail2Y - 8}px`
-      }
-      if (trail3) {
-        trail3.style.left = `${trail3X - 6}px`
-        trail3.style.top = `${trail3Y - 6}px`
-      }
-      if (trail4) {
-        trail4.style.left = `${trail4X - 4}px`
-        trail4.style.top = `${trail4Y - 4}px`
-      }
-      
-      requestAnimationFrame(animateTrail)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    animateTrail()
-
     // Load remaining uses
     setRemainingUses(FreeTrialManager.getRemainingUses())
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-    }
   }, [])
 
   // Authentication check - redirect if not signed in
@@ -114,6 +51,190 @@ export default function AppPage() {
       document.documentElement.classList.add('dark')
     } else {
       document.documentElement.classList.remove('dark')
+    }
+  }, [isDarkMode])
+
+  // Neural Network Effect
+  useEffect(() => {
+    const canvas = document.getElementById('neural-canvas') as HTMLCanvasElement
+    if (!canvas) return
+    
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    const neurons: {
+      x: number
+      y: number
+      vx: number
+      vy: number
+      connections: number[]
+      activated: boolean
+      activationLevel: number
+    }[] = []
+
+    const numNeurons = 80
+    const connectionDistance = 200
+    const activationDistance = 150
+    let mouseX = canvas.width / 2
+    let mouseY = canvas.height / 2
+
+    for (let i = 0; i < numNeurons; i++) {
+      neurons.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        connections: [],
+        activated: false,
+        activationLevel: 0
+      })
+    }
+
+    const updateConnections = () => {
+      neurons.forEach((neuron, i) => {
+        neuron.connections = []
+        neurons.forEach((other, j) => {
+          if (i !== j) {
+            const dx = other.x - neuron.x
+            const dy = other.y - neuron.y
+            const distance = Math.sqrt(dx * dx + dy * dy)
+            if (distance < connectionDistance) {
+              neuron.connections.push(j)
+            }
+          }
+        })
+      })
+    }
+
+    updateConnections()
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const isDark = document.documentElement.classList.contains('dark')
+
+      neurons.forEach(neuron => {
+        neuron.x += neuron.vx
+        neuron.y += neuron.vy
+        if (neuron.x < 0 || neuron.x > canvas.width) neuron.vx *= -1
+        if (neuron.y < 0 || neuron.y > canvas.height) neuron.vy *= -1
+        neuron.x = Math.max(0, Math.min(canvas.width, neuron.x))
+        neuron.y = Math.max(0, Math.min(canvas.height, neuron.y))
+
+        const dx = mouseX - neuron.x
+        const dy = mouseY - neuron.y
+        const distToMouse = Math.sqrt(dx * dx + dy * dy)
+        if (distToMouse < activationDistance) {
+          neuron.activated = true
+          neuron.activationLevel = Math.min(1, neuron.activationLevel + 0.1)
+        } else {
+          neuron.activated = false
+          neuron.activationLevel = Math.max(0, neuron.activationLevel - 0.05)
+        }
+      })
+
+      if (Math.random() < 0.01) updateConnections()
+
+      neurons.forEach((neuron) => {
+        neuron.connections.forEach(targetIndex => {
+          const target = neurons[targetIndex]
+          const dx = target.x - neuron.x
+          const dy = target.y - neuron.y
+          const strength = (neuron.activationLevel + target.activationLevel) / 2
+          const baseAlpha = isDark ? 0.04 : 0.03
+          const alpha = baseAlpha + strength * 0.2
+
+          const gradient = ctx.createLinearGradient(neuron.x, neuron.y, target.x, target.y)
+          if (isDark) {
+            gradient.addColorStop(0, `rgba(139, 92, 246, ${alpha})`)
+            gradient.addColorStop(0.5, `rgba(168, 85, 247, ${alpha + 0.1})`)
+            gradient.addColorStop(1, `rgba(139, 92, 246, ${alpha})`)
+          } else {
+            gradient.addColorStop(0, `rgba(147, 51, 234, ${alpha})`)
+            gradient.addColorStop(0.5, `rgba(168, 85, 247, ${alpha + 0.1})`)
+            gradient.addColorStop(1, `rgba(147, 51, 234, ${alpha})`)
+          }
+          ctx.strokeStyle = gradient
+          ctx.lineWidth = strength > 0.3 ? 2 : 1
+          ctx.beginPath()
+          ctx.moveTo(neuron.x, neuron.y)
+          ctx.lineTo(target.x, target.y)
+          ctx.stroke()
+
+          if (strength > 0.5) {
+            const progress = (Date.now() % 2000) / 2000
+            const particleX = neuron.x + dx * progress
+            const particleY = neuron.y + dy * progress
+            ctx.fillStyle = isDark ? 'rgba(192, 132, 252, 0.8)' : 'rgba(168, 85, 247, 0.8)'
+            ctx.beginPath()
+            ctx.arc(particleX, particleY, 2, 0, Math.PI * 2)
+            ctx.fill()
+          }
+        })
+      })
+
+      neurons.forEach(neuron => {
+        const size = 3 + neuron.activationLevel * 5
+        if (neuron.activationLevel > 0) {
+          const glowSize = size + 8
+          const gradient = ctx.createRadialGradient(neuron.x, neuron.y, 0, neuron.x, neuron.y, glowSize)
+          if (isDark) {
+            gradient.addColorStop(0, `rgba(168, 85, 247, ${neuron.activationLevel * 0.3})`)
+            gradient.addColorStop(0.5, `rgba(139, 92, 246, ${neuron.activationLevel * 0.15})`)
+            gradient.addColorStop(1, 'rgba(168, 85, 247, 0)')
+          } else {
+            gradient.addColorStop(0, `rgba(147, 51, 234, ${neuron.activationLevel * 0.25})`)
+            gradient.addColorStop(0.5, `rgba(168, 85, 247, ${neuron.activationLevel * 0.12})`)
+            gradient.addColorStop(1, 'rgba(147, 51, 234, 0)')
+          }
+          ctx.fillStyle = gradient
+          ctx.beginPath()
+          ctx.arc(neuron.x, neuron.y, glowSize, 0, Math.PI * 2)
+          ctx.fill()
+        }
+
+        ctx.fillStyle = neuron.activationLevel > 0
+          ? (isDark ? `rgba(192, 132, 252, ${0.4 + neuron.activationLevel * 0.2})` : `rgba(168, 85, 247, ${0.4 + neuron.activationLevel * 0.2})`)
+          : (isDark ? 'rgba(139, 92, 246, 0.25)' : 'rgba(147, 51, 234, 0.25)')
+        ctx.beginPath()
+        ctx.arc(neuron.x, neuron.y, size, 0, Math.PI * 2)
+        ctx.fill()
+
+        if (neuron.activationLevel > 0.5) {
+          ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.4)'
+          ctx.beginPath()
+          ctx.arc(neuron.x, neuron.y, size * 0.4, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      })
+
+      requestAnimationFrame(animate)
+    }
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      neurons.forEach(neuron => {
+        neuron.x = Math.min(neuron.x, canvas.width)
+        neuron.y = Math.min(neuron.y, canvas.height)
+      })
+      updateConnections()
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('resize', handleResize)
+    animate()
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', handleResize)
     }
   }, [isDarkMode])
 
@@ -192,57 +313,23 @@ export default function AppPage() {
   return (
     <>
       <style jsx global>{`
-        * { cursor: none !important; }
-        html, body, div, button, a, input, textarea, select { cursor: none !important; }
-        body { cursor: none !important; }
-        .cursor-comet { cursor: none !important; }
+        * {
+          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 2L16 10L9 11L6 16L2 2Z" fill="%23a855f7" stroke="%23ffffff" stroke-width="1"/></svg>') 2 2, auto !important;
+        }
       `}</style>
       
-      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white overflow-x-hidden cursor-comet transition-colors duration-300">
-        {/* Custom Cursor - Küçültülmüş */}
-        <div id="cursor" className="fixed w-6 h-6 pointer-events-none z-[9999]">
-          <div className="absolute inset-0 bg-purple-700 dark:bg-purple-500 rounded-full blur-sm" />
-          <div className="absolute inset-0 bg-pink-600 dark:bg-pink-400 rounded-full blur-md opacity-70" />
-        </div>
-        {/* Cursor Trail with multiple segments */}
-        <div id="cursor-trail-1" className="fixed w-5 h-5 pointer-events-none z-[9997]">
-          <div className="absolute inset-0 bg-purple-600 dark:bg-purple-400 rounded-full blur-sm opacity-60" />
-        </div>
-        <div id="cursor-trail-2" className="fixed w-4 h-4 pointer-events-none z-[9996]">
-          <div className="absolute inset-0 bg-purple-500 dark:bg-purple-400 rounded-full blur-sm opacity-45" />
-        </div>
-        <div id="cursor-trail-3" className="fixed w-4 h-4 pointer-events-none z-[9995]">
-          <div className="absolute inset-0 bg-pink-500 dark:bg-pink-400 rounded-full blur-sm opacity-35" />
-        </div>
-        <div id="cursor-trail-4" className="fixed w-3 h-3 pointer-events-none z-[9994]">
-          <div className="absolute inset-0 bg-pink-400 dark:bg-pink-300 rounded-full blur-sm opacity-25" />
-        </div>
-
-        {/* Modern Background */}
-        <div className="fixed inset-0 z-0">
-          {/* Dark Mode: Animated gradient blurs */}
-          <div className="absolute inset-0 dark:block hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-black to-blue-900/20" />
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '700ms' }} />
-          </div>
-          
-          {/* Light Mode: Clean subtle grid */}
-          <div className="absolute inset-0 dark:hidden block bg-gradient-to-b from-gray-50 via-white to-gray-50">
-            <div 
-              className="absolute inset-0 opacity-[0.4]"
-              style={{
-                backgroundImage: 'linear-gradient(to right, rgb(229 231 235 / 0.3) 1px, transparent 1px), linear-gradient(to bottom, rgb(229 231 235 / 0.3) 1px, transparent 1px)',
-                backgroundSize: '80px 80px',
-              }}
-            />
-            <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-purple-200/20 rounded-full blur-[100px]" />
-            <div className="absolute bottom-20 right-1/4 w-[500px] h-[500px] bg-blue-200/20 rounded-full blur-[100px]" />
-          </div>
-        </div>
+      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white overflow-hidden transition-colors duration-300">
+      {/* Neural Network Background - Hidden on mobile */}
+      <div className="hidden md:block fixed inset-0 z-0">
+        <canvas 
+          id="neural-canvas" 
+          className="absolute inset-0 w-full h-full"
+        />
+        <div className="absolute inset-0 dark:bg-gradient-to-b dark:from-black/40 dark:via-transparent dark:to-black/60 bg-gradient-to-b from-white/50 via-transparent to-white/70 pointer-events-none" />
+      </div>
 
         {/* Header */}
-        <header className="relative z-10 border-b border-gray-200 dark:border-white/10 bg-white/80 dark:bg-black/60 backdrop-blur-xl transition-colors duration-300">
+        <header className="relative z-[60] border-b border-gray-200 dark:border-white/10 bg-white/80 dark:bg-black/60 backdrop-blur-xl transition-colors duration-300 pointer-events-auto">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
             <Link href="/landing" className="flex items-center gap-3 group">
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
