@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { userStore } from '@/lib/userStore'
 import { validateEmail, sanitizeEmail, getClientIp } from '@/lib/security'
 import { passwordResetStore } from '@/lib/passwordResetStore'
+import { sendPasswordResetEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,22 +39,13 @@ export async function POST(request: NextRequest) {
       // Generate reset token
       const token = passwordResetStore.createToken(sanitizedEmail)
       
-      // In production, send email with reset link
-      // For development, we'll just log it
-      const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}`
+      // Send password reset email
+      const emailResult = await sendPasswordResetEmail(sanitizedEmail, token)
       
-      console.log('=================================')
-      console.log('PASSWORD RESET LINK (DEV MODE):')
-      console.log(`Email: ${sanitizedEmail}`)
-      console.log(`Link: ${resetLink}`)
-      console.log('=================================')
-      
-      // TODO: Production - Send email
-      // await sendEmail({
-      //   to: sanitizedEmail,
-      //   subject: 'Reset Your Password',
-      //   html: `Click here to reset your password: <a href="${resetLink}">${resetLink}</a>`
-      // })
+      if (!emailResult.success) {
+        console.error('Failed to send password reset email:', emailResult.error)
+        // Don't reveal error to user for security
+      }
     }
 
     return NextResponse.json({
