@@ -387,14 +387,15 @@ export default function SignInPage() {
               {content.google}
             </button>
 
-            <button
+            {/* GitHub OAuth disabled - only Google OAuth active */}
+            {/* <button
               onClick={() => handleSocialSignIn('github')}
               disabled={loading}
               className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl font-semibold transition flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed border border-white/10"
             >
               <Github className="w-5 h-5" />
               {content.github}
-            </button>
+            </button> */}
           </div>
 
           {/* Divider */}

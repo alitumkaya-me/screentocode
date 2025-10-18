@@ -35,9 +35,21 @@ export default function AppPage() {
   const t = useTranslation(language)
   const currency = getCurrency(language)
 
+  // Save language preference when changed
+  const handleLanguageChange = (newLanguage: Language) => {
+    setLanguage(newLanguage)
+    localStorage.setItem('preferred-language', newLanguage)
+  }
+
   useEffect(() => {
     // Load remaining uses
     setRemainingUses(FreeTrialManager.getRemainingUses())
+    
+    // Load saved language preference
+    const savedLanguage = localStorage.getItem('preferred-language') as Language
+    if (savedLanguage && ['tr', 'en'].includes(savedLanguage)) {
+      setLanguage(savedLanguage)
+    }
     
     // Check for saved tab from landing page
     const savedTab = localStorage.getItem('app-active-tab')
@@ -453,7 +465,7 @@ export default function AppPage() {
               {/* Language Toggle - Küçültülmüş */}
               <div className="flex items-center gap-1 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg p-0.5">
                 <button
-                  onClick={() => setLanguage('tr')}
+                  onClick={() => handleLanguageChange('tr')}
                   className={`px-2 py-1 rounded text-xs font-bold transition ${
                     language === 'tr' 
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
@@ -463,7 +475,7 @@ export default function AppPage() {
                   🇹🇷
                 </button>
                 <button
-                  onClick={() => setLanguage('en')}
+                  onClick={() => handleLanguageChange('en')}
                   className={`px-2 py-1 rounded text-xs font-bold transition ${
                     language === 'en' 
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
@@ -849,7 +861,7 @@ export default function AppPage() {
                           </div>
                           <div className="flex items-center gap-1 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg p-0.5">
                             <button
-                              onClick={() => setLanguage('tr')}
+                              onClick={() => handleLanguageChange('tr')}
                               className={`px-3 py-1.5 rounded text-sm font-bold transition ${
                                 language === 'tr' 
                                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
@@ -859,7 +871,7 @@ export default function AppPage() {
                               🇹🇷 TR
                             </button>
                             <button
-                              onClick={() => setLanguage('en')}
+                              onClick={() => handleLanguageChange('en')}
                               className={`px-3 py-1.5 rounded text-sm font-bold transition ${
                                 language === 'en' 
                                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 

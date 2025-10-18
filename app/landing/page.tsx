@@ -24,6 +24,20 @@ export default function LandingPage() {
   
   const t = useTranslation(language)
 
+  // Load saved language preference
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('preferred-language') as Language
+    if (savedLanguage && ['tr', 'en'].includes(savedLanguage)) {
+      setLanguage(savedLanguage)
+    }
+  }, [])
+
+  // Save language preference when changed
+  const handleLanguageChange = (newLanguage: Language) => {
+    setLanguage(newLanguage)
+    localStorage.setItem('preferred-language', newLanguage)
+  }
+
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', handleScroll)
