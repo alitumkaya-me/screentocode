@@ -70,6 +70,20 @@ export const userStore = {
   },
 
   /**
+   * Update user's password
+   */
+  updatePassword: (userId: string, hashedPassword: string): boolean => {
+    const user = users.get(userId)
+    if (user) {
+      user.password = hashedPassword
+      user.loginAttempts = 0
+      user.lockedUntil = null
+      return true
+    }
+    return false
+  },
+
+  /**
    * Increment login attempts
    */
   incrementLoginAttempts: (userId: string): void => {

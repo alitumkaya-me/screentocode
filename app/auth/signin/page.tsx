@@ -22,6 +22,7 @@ export default function SignInPage() {
       email: 'E-posta',
       password: 'Şifre',
       showPassword: 'Şifreyi göster',
+      forgotPassword: 'Şifremi Unuttum?',
       signIn: 'Giriş Yap',
       signingIn: 'Giriş yapılıyor...',
       or: 'veya',
@@ -69,6 +70,7 @@ export default function SignInPage() {
       email: 'Email',
       password: 'Password',
       showPassword: 'Show password',
+      forgotPassword: 'Forgot Password?',
       signIn: 'Sign In',
       signingIn: 'Signing in...',
       or: 'or',
@@ -462,6 +464,13 @@ export default function SignInPage() {
               {!loading && <ArrowRight className="w-5 h-5" />}
             </button>
           </form>
+
+          {/* Forgot Password Link */}
+          <div className="text-center mt-4">
+            <Link href="/auth/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 font-medium">
+              {content.forgotPassword}
+            </Link>
+          </div>
 
           {/* Sign Up Link */}
           <p className="text-center text-gray-400 mt-6">
