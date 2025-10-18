@@ -33,6 +33,18 @@ export async function POST(request: NextRequest) {
     // Check if user exists
     const user = userStore.findByEmail(sanitizedEmail)
     
+    // Development mode: Log all users for debugging
+    if (process.env.NODE_ENV === 'development') {
+      const allUsers = userStore.getAllUsers()
+      console.log('=================================')
+      console.log('🔍 FORGOT PASSWORD DEBUG:')
+      console.log(`Requested email: ${sanitizedEmail}`)
+      console.log(`User found: ${user ? 'YES ✅' : 'NO ❌'}`)
+      console.log(`Total registered users: ${allUsers.length}`)
+      console.log('Registered emails:', allUsers.map(u => u.email))
+      console.log('=================================')
+    }
+    
     // Always return success (security: don't reveal if email exists)
     // But only send email if user exists
     if (user) {
@@ -43,14 +55,23 @@ export async function POST(request: NextRequest) {
       const emailResult = await sendPasswordResetEmail(sanitizedEmail, token)
       
       if (!emailResult.success) {
-        console.error('Failed to send password reset email:', emailResult.error)
-        // Don't reveal error to user for security
+        console.error('❌ Failed to send password reset email:', emailResult.error)
+      } else {
+        console.log('✅ Password reset email sent successfully to:', sanitizedEmail)
       }
+    } else {
+      console.log('⚠️ No user found with email:', sanitizedEmail)
     }
 
     return NextResponse.json({
       success: true,
-      message: 'If an account exists with this email, you will receive a password reset link.'
+      message: 'If an account exists with this email, you will receive a password reset link.',
+      // Development only - remove in production
+      debug: process.env.NODE_ENV === 'development' ? {
+        userExists: !!user,
+        email: sanitizedEmail,
+        hasResendKey: !!process.env.RESEND_API_KEY
+      } : undefined
     })
 
   } catch (error) {

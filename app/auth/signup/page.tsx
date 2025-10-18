@@ -162,6 +162,16 @@ export default function SignUpPage() {
         return
       }
 
+      // Development mode: Log successful registration
+      if (process.env.NODE_ENV === 'development') {
+        console.log('=================================')
+        console.log('✅ KAYIT BAŞARILI!')
+        console.log(`Email: ${email}`)
+        console.log(`Name: ${name}`)
+        console.log('Şimdi otomatik giriş yapılıyor...')
+        console.log('=================================')
+      }
+
       // 2. Auto sign in after successful registration
       const signInResult = await signIn('credentials', {
         email,
@@ -170,13 +180,16 @@ export default function SignUpPage() {
       })
 
       if (signInResult?.error) {
-        setError('Registration successful, but auto sign-in failed. Please sign in manually.')
+        console.error('Auto sign-in error:', signInResult.error)
+        setError('Kayıt başarılı! Lütfen giriş sayfasından manuel olarak giriş yapın.')
         setLoading(false)
         setTimeout(() => {
           router.push('/auth/signin')
         }, 2000)
         return
       }
+
+      console.log('✅ Giriş başarılı! Dashboard\'a yönlendiriliyor...')
 
       // 3. Redirect to app
       setTimeout(() => {

@@ -47,11 +47,30 @@ export default function ForgotPasswordPage() {
                 </svg>
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-                Check Your Email
+                İşlem Tamamlandı
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                If an account exists with <strong>{email}</strong>, you will receive a password reset link shortly.
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Şifre sıfırlama talebiniz alındı.
               </p>
+              
+              {/* Development Mode Notice */}
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/30 rounded-lg p-4 mb-4">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium mb-2">
+                  💡 Development Mode
+                </p>
+                <p className="text-xs text-yellow-700 dark:text-yellow-300 mb-2">
+                  Email gönderimi için RESEND_API_KEY gerekli.
+                </p>
+                <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                  Reset link'i console'da (F12) bulabilirsiniz veya <code className="bg-yellow-100 dark:bg-yellow-900/50 px-1 rounded">RESEND_QUICKSTART.md</code> dosyasına bakın.
+                </p>
+              </div>
+
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>{email}</strong> adresine kayıtlıysanız, reset link'i alacaksınız.
+                </p>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -59,7 +78,14 @@ export default function ForgotPasswordPage() {
                 href="/auth/signin"
                 className="block w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 text-center"
               >
-                Back to Sign In
+                Giriş Sayfasına Dön
+              </Link>
+              <Link
+                href="/api/debug/users"
+                target="_blank"
+                className="block w-full py-2 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm transition-all duration-200 text-center"
+              >
+                🔍 Kayıtlı Kullanıcıları Gör (Debug)
               </Link>
             </div>
           </div>
