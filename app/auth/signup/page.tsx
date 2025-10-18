@@ -141,23 +141,50 @@ export default function SignUpPage() {
     setError(null)
 
     try {
-      // Mock sign up - gerçek uygulamada API endpoint'e istek atılmalı
-      const result = await signIn('credentials', {
+      // 1. Register user via API
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          name
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setError(data.error || content.error)
+        setLoading(false)
+        return
+      }
+
+      // 2. Auto sign in after successful registration
+      const signInResult = await signIn('credentials', {
         email,
         password,
         redirect: false,
       })
 
-      if (result?.error) {
-        setError(content.error)
+      if (signInResult?.error) {
+        setError('Registration successful, but auto sign-in failed. Please sign in manually.')
         setLoading(false)
-      } else {
-        // 5 saniye loading göster
         setTimeout(() => {
-          router.push('/app')
-        }, 5000)
+          router.push('/auth/signin')
+        }, 2000)
+        return
       }
+
+      // 3. Redirect to app
+      setTimeout(() => {
+        router.push('/app')
+      }, 1000)
+
     } catch (err) {
+      console.error('Sign up error:', err)
       setError(content.error)
       setLoading(false)
     }
@@ -501,7 +528,32 @@ export default function SignUpPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">{content.passwordHint}</p>
+              
+              {/* Password Requirements */}
+              {password && (
+                <div className="mt-3 space-y-2 text-xs">
+                  <div className={`flex items-center gap-2 ${password.length >= 8 ? 'text-green-400' : 'text-gray-500'}`}>
+                    <Check className={`w-4 h-4 ${password.length >= 8 ? 'opacity-100' : 'opacity-30'}`} />
+                    <span>{language === 'tr' ? 'En az 8 karakter' : 'At least 8 characters'}</span>
+                  </div>
+                  <div className={`flex items-center gap-2 ${/[A-Z]/.test(password) ? 'text-green-400' : 'text-gray-500'}`}>
+                    <Check className={`w-4 h-4 ${/[A-Z]/.test(password) ? 'opacity-100' : 'opacity-30'}`} />
+                    <span>{language === 'tr' ? 'Bir büyük harf' : 'One uppercase letter'}</span>
+                  </div>
+                  <div className={`flex items-center gap-2 ${/[a-z]/.test(password) ? 'text-green-400' : 'text-gray-500'}`}>
+                    <Check className={`w-4 h-4 ${/[a-z]/.test(password) ? 'opacity-100' : 'opacity-30'}`} />
+                    <span>{language === 'tr' ? 'Bir küçük harf' : 'One lowercase letter'}</span>
+                  </div>
+                  <div className={`flex items-center gap-2 ${/[0-9]/.test(password) ? 'text-green-400' : 'text-gray-500'}`}>
+                    <Check className={`w-4 h-4 ${/[0-9]/.test(password) ? 'opacity-100' : 'opacity-30'}`} />
+                    <span>{language === 'tr' ? 'Bir rakam' : 'One number'}</span>
+                  </div>
+                  <div className={`flex items-center gap-2 ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? 'text-green-400' : 'text-gray-500'}`}>
+                    <Check className={`w-4 h-4 ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? 'opacity-100' : 'opacity-30'}`} />
+                    <span>{language === 'tr' ? 'Bir özel karakter (!@#$%...)' : 'One special character (!@#$%...)'}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {error && (

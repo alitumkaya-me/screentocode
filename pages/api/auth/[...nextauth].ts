@@ -2,6 +2,8 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { userStore } from '@/lib/userStore'
+import { validateEmail, sanitizeEmail, verifyPassword } from '@/lib/security'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,17 +21,62 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials) {
-        // Mock authentication - gerçek uygulamada veritabanı kontrolü yapılmalı
-        if (credentials?.email && credentials?.password) {
-          return {
-            id: '1',
-            email: credentials.email,
-            name: credentials.email.split('@')[0],
-            image: null,
+      async authorize(credentials, req) {
+        try {
+          // Validate inputs
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error('Email and password are required')
           }
+
+          // Validate email format
+          const emailValidation = validateEmail(credentials.email)
+          if (!emailValidation.valid) {
+            throw new Error(emailValidation.error || 'Invalid email')
+          }
+
+          // Sanitize email
+          const sanitizedEmail = sanitizeEmail(credentials.email)
+
+          // Rate limiting check
+          const identifier = `login_${sanitizedEmail}`
+          if (!userStore.checkRateLimit(identifier)) {
+            throw new Error('Too many login attempts. Please try again later.')
+          }
+
+          // Find user
+          const user = userStore.findByEmail(sanitizedEmail)
+          if (!user) {
+            throw new Error('Invalid email or password')
+          }
+
+          // Check if account is locked
+          if (userStore.isUserLocked(user)) {
+            throw new Error('Account temporarily locked due to multiple failed login attempts')
+          }
+
+          // Verify password
+          const isValidPassword = await verifyPassword(credentials.password, user.password)
+          
+          if (!isValidPassword) {
+            // Increment failed attempts
+            userStore.incrementLoginAttempts(user.id)
+            throw new Error('Invalid email or password')
+          }
+
+          // Update last login
+          userStore.updateLastLogin(user.id)
+
+          // Return user (NextAuth will create session)
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+          }
+        } catch (error) {
+          console.error('Auth error:', error)
+          return null
         }
-        return null
       }
     })
   ],
