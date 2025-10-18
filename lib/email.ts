@@ -6,8 +6,11 @@
 
 import { Resend } from 'resend'
 
-// Initialize Resend (will use RESEND_API_KEY from env)
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend only if API key exists
+// This prevents build errors when RESEND_API_KEY is not set
+const resend = process.env.RESEND_API_KEY 
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
 
 // Your verified sender email
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
@@ -23,7 +26,7 @@ export async function sendPasswordResetEmail(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // If no API key, fall back to console logging (development)
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY || !resend) {
       console.log('=================================')
       console.log('📧 EMAIL WOULD BE SENT (DEV MODE):')
       console.log(`To: ${to}`)
@@ -172,7 +175,7 @@ export async function sendWelcomeEmail(
   name: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY || !resend) {
       console.log('📧 Welcome email would be sent to:', to)
       return { success: true }
     }
